@@ -146,10 +146,10 @@ section#categorias li {
     }
 }
 
-/* Desktop: productos a la izquierda, carrito a la derecha */
+/* Desktop: solo catálogo, carrito sacado del grid */
 @media (min-width: 1024px) {
     .catalog-grid {
-        grid-template-columns: 2fr 1fr;
+        grid-template-columns: 1fr;
     }
 }
 
@@ -228,11 +228,18 @@ section#categorias li {
 
 /* ========== PANEL DEL CARRITO (ASIDE) ========== */
 #cart-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 300px;
     background-color: var(--color-aside-bg);
     border: 1px solid var(--color-card-border);
     border-radius: var(--radius);
     padding: var(--padding);
     box-shadow: var(--shadow);
+    z-index: 100;
+    overflow-y: auto;
 }
 
 #cart-panel h2 {
