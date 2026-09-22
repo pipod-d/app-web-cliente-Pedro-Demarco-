@@ -78,27 +78,50 @@ header nav a:hover {
     color: var(--color-primary);
 }
 
-#cart-btn {
-    background-color: var(--color-primary);
+/* ========== ÍCONO Y BADGE DEL CARRITO (HEADER) ========== */
+.cart-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: var(--color-text);
-    border: none;
-    border-radius: var(--radius);
-    padding: 0.6rem 1.2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    font-family: var(--font-main);
-    font-size: var(--font-size-base);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: color 0.3s ease, transform 0.2s ease;
 }
 
-#cart-btn:hover {
-    background-color: var(--color-primary-hover);
+.cart-link:hover {
+    color: var(--color-primary);
     transform: scale(1.05);
+}
+
+.cart-link svg {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+#cart-counter {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+    background-color: var(--color-primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
 /* ========== SECCIONES GENERALES ========== */
 section#categorias,
+section#catalogo,
 section#ofertas,
 section#contacto {
     padding: 2rem;
@@ -108,7 +131,8 @@ section#contacto {
 
 section#categorias h2,
 section#ofertas h2,
-section#contacto h2 {
+section#contacto h2,
+section#carrito h2 {
     color: var(--color-primary);
     font-size: var(--font-size-lg);
     margin-bottom: 1rem;
@@ -129,32 +153,13 @@ section#categorias li {
     color: var(--color-text);
 }
 
-/* ========== LAYOUT PRINCIPAL (CSS GRID - MOBILE-FIRST) ========== */
-.catalog-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--gap);
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-/* Tablet */
-@media (min-width: 768px) {
-    .catalog-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Desktop: productos a la izquierda, carrito a la derecha */
-@media (min-width: 1024px) {
-    .catalog-grid {
-        grid-template-columns: 2fr 1fr;
-    }
-}
-
 /* ========== CATÁLOGO (GRID DE CARDS) ========== */
 #catalogo h2 {
+    grid-column: 1/-1;
+ text-align: center;
+ }
+#catalogo h2 {
+    grid-column: 1/-1;
     font-size: var(--font-size-lg);
     margin-bottom: 1.5rem;
     color: var(--color-text);
@@ -162,7 +167,7 @@ section#categorias li {
 
 #catalogo {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns:1fr;   
     gap: var(--gap);
 }
 
@@ -174,7 +179,7 @@ section#categorias li {
 
 @media (min-width: 1024px) {
     #catalogo {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -188,7 +193,16 @@ section#categorias li {
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     gap: 0.75rem;
+}
+
+#catalogo article img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 1rem;
 }
 
 #catalogo article h3 {
@@ -201,23 +215,45 @@ section#categorias li {
     opacity: 0.8;
 }
 
+/* ========== ACCIONES DE LA CARD ========== */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
 #catalogo article button {
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    border: none;
+    flex: 1;
     border-radius: var(--radius);
-    padding: 0.75rem 1.5rem;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    align-self: flex-start;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
     font-family: var(--font-main);
 }
 
-#catalogo article button:hover {
+#catalogo .btn-agregar {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+}
+
+#catalogo .btn-agregar:hover {
     background-color: var(--color-primary-hover);
-    transform: scale(1.05);
+    transform: scale(1.03);
+}
+
+#catalogo .btn-detalle {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-card-border);
+}
+
+#catalogo .btn-detalle:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 #catalogo article:hover {
@@ -226,23 +262,7 @@ section#categorias li {
     border-color: var(--color-primary);
 }
 
-/* ========== PANEL DEL CARRITO (ASIDE) ========== */
-#cart-panel {
-    background-color: var(--color-aside-bg);
-    border: 1px solid var(--color-card-border);
-    border-radius: var(--radius);
-    padding: var(--padding);
-    box-shadow: var(--shadow);
-}
-
-#cart-panel h2 {
-    color: var(--color-primary);
-    font-size: var(--font-size-lg);
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--color-card-border);
-    padding-bottom: 0.5rem;
-}
-
+/* ========== PÁGINA DEL CARRITO ========== */
 .cart-empty {
     color: var(--color-text);
     opacity: 0.6;
@@ -250,10 +270,32 @@ section#categorias li {
     margin-bottom: 1rem;
 }
 
-.cart-total {
+#carrito {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+#carrito .cart-empty {
+    font-size: 1.125rem;
+    margin-bottom: 2rem;
+}
+
+.btn-volver {
+    display: inline-block;
+    background-color: var(--color-primary);
     color: var(--color-text);
+    border-radius: var(--radius);
+    padding: 0.75rem 1.5rem;
     font-weight: 700;
-    font-size: 1.25rem;
-    border-top: 1px solid var(--color-card-border);
-    padding-top: 0.75rem;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-family: var(--font-main);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-volver:hover {
+    background-color: var(--color-primary-hover);
+    transform: scale(1.05);
 }

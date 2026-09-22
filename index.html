@@ -15,70 +15,85 @@
                 <li><a href="#catalogo">Catálogo</a></li>
                 <li><a href="#ofertas">Ofertas</a></li>
                 <li><a href="#contacto">Contacto</a></li>
-                <li><button id="cart-btn">Carrito (0)</button></li>
+                <li>
+                    <a href="carrito.html" class="cart-link" aria-label="Carrito de compras">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-counter">0</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
     <main id="inicio">
-        <section id="categorias">
-            <h2>Categorías</h2>
-            <ul>
-                <li>Pesas</li>
-                <li>Cardio</li>
-                <li>Indumentaria</li>
-                <li>Accesorios</li>
-            </ul>
-        </section>
-        <div class="catalog-grid">
-            <section id="catalogo">
-                <h2>Catálogo de productos</h2>
-                <article>
-                    <h3>Mancuernas hexagonales</h3>
-                    <p>Mancuernas hexagonales de alta resistencia, ideales para entrenamiento de fuerza seguro en piso.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Pesa Rusa de 12kg</h3>
-                    <p>Pesa rusa de 12kg construida en hierro fundido, perfecta para swing, snatch y ejercicios funcionales.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Barra Olímpica</h3>
-                    <p>Barra olímpica profesional de 20kg con rodamientos, diseñada para levantamiento de pesas competitivo.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Disco Fundición 20 kg</h3>
-                    <p>Disco de fundición de 20kg, diseñado para entrenamiento de fuerza y condicionamiento físico de alto nivel.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Barra Olímpica EZ</h3>
-                    <p>Barra olímpica EZ con mango ergonómico, ideal para curl de bíceps y ejercicios de aislamiento.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Barra Olímpica Hexagonal</h3>
-                    <p>Barra olímpica hexagonal de hexágono para ejercicios funcionales y entrenamiento deportivo profesional.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-                <article>
-                    <h3>Mancuerna Maciza Cromada</h3>
-                    <p>Mancuerna maciza cromada de peso fijo, construcción robusta con agarre antideslizante para máximo rendimiento.</p>
-                    <button class="btn-agregar">Comprar</button>
-                </article>
-            </section>
-            <aside id="cart-panel">
-                <h2>Carrito</h2>
-                <p class="cart-empty">Tu carrito está vacío.</p>
-                <p class="cart-total">Total: $0</p>
-            </aside>
-        </div>
-        <section id="ofertas">
-            <h2>Ofertas</h2>
-        </section>
-        <section id="contacto">
-            <h2>Contacto</h2>
+        <section id="catalogo">
+            <h2>Catálogo de productos</h2>
+            <article>
+                <img src="imagenes/Mancuernas hexagonales de 5kg.png" alt="Mancuernas hexagonales de 5kg" loading="lazy">
+                <h3>Mancuernas hexagonales de 5kg</h3>
+                <p>Mancuernas hexagonales de alta resistencia, ideales para entrenamiento de fuerza seguro en piso.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Mancuernas hexagonales de 5kg" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Pesa Rusa de 12kg.png" alt="Pesa Rusa de 12kg" loading="lazy">
+                <h3>Pesa Rusa de 12kg</h3>
+                <p>Pesa rusa de 12kg construida en hierro fundido, perfecta para swing, snatch y ejercicios funcionales.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Pesa Rusa de 12kg" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Barra Olimpica.png" alt="Barra Olímpica" loading="lazy">
+                <h3>Barra Olímpica</h3>
+                <p>Barra olímpica profesional de 20kg con rodamientos, diseñada para levantamiento de pesas competitivo.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Barra Olímpica" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Disco Fundición 20 kg.png" alt="Disco Fundición 20 kg" loading="lazy">
+                <h3>Disco Fundición 20 kg</h3>
+                <p>Disco de fundición de 20kg, diseñado para entrenamiento de fuerza y condicionamiento físico de alto nivel.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Disco Fundición 20 kg" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Barra Olímpica EZ.png" alt="Barra Olímpica EZ" loading="lazy">
+                <h3>Barra Olímpica EZ</h3>
+                <p>Barra olímpica EZ con mango ergonómico, ideal para curl de bíceps y ejercicios de aislamiento.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Barra Olímpica EZ" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Barra Olímpica Hexagonal.png" alt="Barra Olímpica Hexagonal" loading="lazy">
+                <h3>Barra Olímpica Hexagonal</h3>
+                <p>Barra olímpica hexagonal de hexágono para ejercicios funcionales y entrenamiento deportivo profesional.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Barra Olímpica Hexagonal" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
+            <article>
+                <img src="imagenes/Mancuerna Maciza Cromada.png" alt="Mancuerna Maciza Cromada" loading="lazy">
+                <h3>Mancuerna Maciza Cromada</h3>
+                <p>Mancuerna maciza cromada de peso fijo, construcción robusta con agarre antideslizante para máximo rendimiento.</p>
+                <div class="card-actions">
+                    <button class="btn-agregar" data-producto="Mancuerna Maciza Cromada" data-precio="0">Agregar al Carrito</button>
+                    <button class="btn-detalle">Ver Detalle</button>
+                </div>
+            </article>
         </section>
     </main>
 </body>
