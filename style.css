@@ -155,6 +155,11 @@ section#categorias li {
 
 /* ========== CATÁLOGO (GRID DE CARDS) ========== */
 #catalogo h2 {
+    grid-column: 1/-1;
+ text-align: center;
+ }
+#catalogo h2 {
+    grid-column: 1/-1;
     font-size: var(--font-size-lg);
     margin-bottom: 1.5rem;
     color: var(--color-text);
@@ -162,7 +167,7 @@ section#categorias li {
 
 #catalogo {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns:1fr;   
     gap: var(--gap);
 }
 
@@ -174,7 +179,7 @@ section#categorias li {
 
 @media (min-width: 1024px) {
     #catalogo {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -188,7 +193,16 @@ section#categorias li {
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     gap: 0.75rem;
+}
+
+#catalogo article img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 1rem;
 }
 
 #catalogo article h3 {
@@ -201,23 +215,45 @@ section#categorias li {
     opacity: 0.8;
 }
 
+/* ========== ACCIONES DE LA CARD ========== */
+.card-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: auto;
+}
+
 #catalogo article button {
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    border: none;
+    flex: 1;
     border-radius: var(--radius);
-    padding: 0.75rem 1.5rem;
+    padding: 0.65rem 0.5rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    align-self: flex-start;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
     font-family: var(--font-main);
 }
 
-#catalogo article button:hover {
+#catalogo .btn-agregar {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+}
+
+#catalogo .btn-agregar:hover {
     background-color: var(--color-primary-hover);
-    transform: scale(1.05);
+    transform: scale(1.03);
+}
+
+#catalogo .btn-detalle {
+    background-color: transparent;
+    color: var(--color-text);
+    border: 1px solid var(--color-card-border);
+}
+
+#catalogo .btn-detalle:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
 }
 
 #catalogo article:hover {
