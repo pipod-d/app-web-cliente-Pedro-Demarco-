@@ -261,3 +261,42 @@ document.addEventListener('keydown', (evento) => {
 });
 
 sincronizar();
+
+// ========== FILTRADO DEL CATÁLOGO ==========
+const buscadorInput = document.getElementById('buscador-productos');
+const precioMinInput = document.getElementById('precio-min');
+const precioMaxInput = document.getElementById('precio-max');
+const productosCatalogo = Array.from(
+    document.querySelectorAll('#catalogo article')
+);
+
+const filtrarCatalogo = () => {
+    const busqueda = (buscadorInput?.value || '').trim().toLowerCase();
+    const min =
+        precioMinInput?.value === '' || precioMinInput?.value == null
+            ? 0
+            : Number(precioMinInput.value);
+    const max =
+        precioMaxInput?.value === '' || precioMaxInput?.value == null
+            ? Infinity
+            : Number(precioMaxInput.value);
+
+    const visibles = new Set(
+        productosCatalogo.filter((articulo) => {
+            const titulo =
+                articulo.querySelector('h3')?.textContent.toLowerCase() || '';
+            const precio = convertirPrecio(
+                articulo.querySelector('.btn-agregar')?.dataset.precio
+            );
+            return titulo.includes(busqueda) && precio >= min && precio <= max;
+        })
+    );
+
+    productosCatalogo.forEach((articulo) => {
+        articulo.style.display = visibles.has(articulo) ? '' : 'none';
+    });
+};
+
+buscadorInput?.addEventListener('input', filtrarCatalogo);
+precioMinInput?.addEventListener('input', filtrarCatalogo);
+precioMaxInput?.addEventListener('input', filtrarCatalogo);
