@@ -365,6 +365,14 @@ section#categorias li {
     border-color: var(--color-primary);
 }
 
+#catalogo .catalogo-error {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--color-primary);
+    opacity: 0.85;
+    padding: 2rem 1rem;
+}
+
 /* ========== PÁGINA DEL CARRITO ========== */
 .cart-empty {
     color: var(--color-text);
@@ -766,6 +774,222 @@ body.no-scroll {
 
 .modal .btn-agregar {
     width: 100%;
+}
+
+/* ========== PANEL DE ADMINISTRACIÓN ========== */
+#panel-admin {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+#panel-admin h2 {
+    color: var(--color-primary);
+    font-size: var(--font-size-lg);
+    text-align: center;
+}
+
+#form-producto,
+#lista-productos {
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius);
+    padding: var(--padding);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#form-producto h3,
+#lista-productos h3 {
+    color: var(--color-primary);
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#form-producto .campo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+#form-producto label {
+    color: var(--color-text);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+#form-producto input,
+#form-producto textarea {
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius);
+    color: var(--color-text);
+    font-family: var(--font-main);
+    font-size: var(--font-size-base);
+    padding: 0.65rem 0.75rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    resize: vertical;
+}
+
+#form-producto input:focus,
+#form-producto textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 42, 0, 0.2);
+}
+
+#form-producto .btn-agregar {
+    align-self: flex-start;
+}
+
+.estado {
+    color: var(--color-text);
+    opacity: 0.75;
+    font-size: 0.9rem;
+    min-height: 1.2em;
+}
+
+.item-producto {
+    display: grid;
+    grid-template-columns: 72px 1fr auto;
+    grid-template-areas:
+        "img titulo acciones"
+        "img precio acciones"
+        "img desc acciones";
+    gap: 0.15rem 1rem;
+    align-items: center;
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius);
+    padding: 0.875rem 1rem;
+}
+
+.item-producto img {
+    grid-area: img;
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    background-color: #fff;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+.item-producto h4 {
+    grid-area: titulo;
+    color: var(--color-primary);
+    font-size: 1rem;
+}
+
+.item-producto .item-precio {
+    grid-area: precio;
+    color: var(--color-text);
+    font-weight: 700;
+}
+
+.item-producto .item-desc {
+    grid-area: desc;
+    color: var(--color-text);
+    opacity: 0.7;
+    font-size: 0.85rem;
+}
+
+.item-acciones {
+    grid-area: acciones;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+}
+
+.item-producto .btn-eliminar,
+.item-producto .btn-editar {
+    background-color: transparent;
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius);
+    color: var(--color-text);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.item-producto .btn-editar:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(255, 42, 0, 0.1);
+}
+
+.item-producto .btn-eliminar:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(255, 42, 0, 0.1);
+}
+
+/* ========== FORM: acciones creación/edición ========== */
+.form-acciones {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+#form-producto .btn-cancelar {
+    background-color: transparent;
+    border: 1px solid var(--color-card-border);
+    border-radius: var(--radius);
+    color: var(--color-text);
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-family: var(--font-main);
+    cursor: pointer;
+    transition: border-color 0.3s ease, color 0.3s ease, background-color 0.3s ease;
+}
+
+#form-producto .btn-cancelar:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    background-color: rgba(255, 42, 0, 0.1);
+}
+
+#form-producto .btn-cancelar[hidden] {
+    display: none;
+}
+
+.estado-vacio {
+    color: var(--color-text);
+    opacity: 0.6;
+    font-style: italic;
+    text-align: center;
+}
+
+@media (max-width: 640px) {
+    .item-producto {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "img"
+            "titulo"
+            "precio"
+            "desc"
+            "acciones";
+        justify-items: start;
+    }
+
+    .item-producto .item-acciones {
+        flex-direction: row;
+        margin-top: 0.5rem;
+    }
 }
 
 

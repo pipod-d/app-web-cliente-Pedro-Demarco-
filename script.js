@@ -1,5 +1,14 @@
 const CART_KEY = 'elevation-sport-carrito';
 
+// ========== SUPABASE ==========
+const SUPABASE_URL = 'https://brdaiohchyogcuytzpvq.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_K8nsXrCoSVzAqqhF8OnEDA_4jK4hKJb';
+
+const SUPABASE_HEADERS = {
+    apikey: SUPABASE_KEY,
+    Authorization: `Bearer ${SUPABASE_KEY}`
+};
+
 const modal = document.getElementById('product-modal');
 
 const leerCarrito = () => {
@@ -47,6 +56,11 @@ const obtenerImagen = (boton) => {
         (articulo && articulo.querySelector('img')?.getAttribute('src')) ||
         document.getElementById('modal-img')?.src ||
         '';
+
+    if (/^https?:\/\//i.test(fuente) || fuente.startsWith('data:')) {
+        return fuente;
+    }
+
     const inicio = fuente.indexOf('imagenes/');
     return inicio >= 0 ? fuente.slice(inicio) : '';
 };
@@ -262,15 +276,108 @@ document.addEventListener('keydown', (evento) => {
 
 sincronizar();
 
-// ========== FILTRADO DEL CATÁLOGO ==========
+// ========== CATÁLOGO DINÁMICO (SUPABASE) ==========
+const contenedorCatalogo = document.querySelector(
+    '#catalogo .catalogo-resultados'
+);
 const buscadorInput = document.getElementById('buscador-productos');
 const precioMinInput = document.getElementById('precio-min');
 const precioMaxInput = document.getElementById('precio-max');
-const productosCatalogo = Array.from(
-    document.querySelectorAll('#catalogo article')
-);
 
+const crearTarjetaProducto = (producto) => {
+    const id = producto.id;
+    const nombre = producto.nombre ?? '';
+    const precio = Number(producto.precio) || 0;
+    const descripcion = producto.descripcion ?? '';
+    const urlImagen = producto.url_imagen ?? '';
+    const precioTexto = formatearPrecio(precio);
+
+    const article = document.createElement('article');
+    article.dataset.id = id;
+
+    const img = document.createElement('img');
+    img.src = urlImagen;
+    img.alt = nombre;
+    img.loading = 'lazy';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = nombre;
+
+    const pDesc = document.createElement('p');
+    pDesc.textContent = descripcion;
+
+    const pPrecio = document.createElement('p');
+    pPrecio.className = 'Precio';
+    pPrecio.textContent = precioTexto;
+
+    const cardActions = document.createElement('div');
+    cardActions.className = 'card-actions';
+
+    const btnAgregar = document.createElement('button');
+    btnAgregar.className = 'btn-agregar';
+    btnAgregar.dataset.producto = nombre;
+    btnAgregar.dataset.precio = precioTexto;
+    btnAgregar.dataset.id = id;
+    btnAgregar.textContent = 'Agregar al Carrito';
+
+    const btnDetalle = document.createElement('button');
+    btnDetalle.className = 'btn-detalle';
+    btnDetalle.dataset.id = id;
+    btnDetalle.textContent = 'Ver';
+
+    cardActions.append(btnAgregar, btnDetalle);
+    article.append(img, h3, pDesc, pPrecio, cardActions);
+
+    return article;
+};
+
+const cargarCatalogo = async () => {
+    if (!contenedorCatalogo) return;
+
+    try {
+        const res = await fetch(
+            `${SUPABASE_URL}/rest/v1/productos?select=*`,
+            {
+                method: 'GET',
+                headers: SUPABASE_HEADERS
+            }
+        );
+
+        if (!res.ok) throw new Error(res.status);
+
+        const productos = await res.json();
+
+        contenedorCatalogo
+            .querySelectorAll('article')
+            .forEach((nodo) => nodo.remove());
+
+        const frag = document.createDocumentFragment();
+        productos.forEach((producto) => {
+            frag.append(crearTarjetaProducto(producto));
+        });
+        contenedorCatalogo.append(frag);
+
+        // Los artículos ya están en el DOM: aplico el filtro activo actual
+        filtrarCatalogo();
+    } catch (error) {
+        console.error('Error al cargar el catálogo:', error.message);
+
+        if (!contenedorCatalogo.querySelector('.catalogo-error')) {
+            const aviso = document.createElement('p');
+            aviso.className = 'catalogo-error';
+            aviso.textContent = 'No se pudieron cargar los productos.';
+            contenedorCatalogo.append(aviso);
+        }
+    }
+};
+
+// ========== FILTRADO DEL CATÁLOGO ==========
+// Consulta el DOM en cada ejecución (no cachea el array al cargar el script)
 const filtrarCatalogo = () => {
+    const productosCatalogo = Array.from(
+        document.querySelectorAll('#catalogo .catalogo-resultados article')
+    );
+
     const busqueda = (buscadorInput?.value || '').trim().toLowerCase();
     const min =
         precioMinInput?.value === '' || precioMinInput?.value == null
@@ -300,3 +407,8 @@ const filtrarCatalogo = () => {
 buscadorInput?.addEventListener('input', filtrarCatalogo);
 precioMinInput?.addEventListener('input', filtrarCatalogo);
 precioMaxInput?.addEventListener('input', filtrarCatalogo);
+
+cargarCatalogo();
+
+
+
