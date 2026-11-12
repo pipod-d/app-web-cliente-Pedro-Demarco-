@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Registro - Elevation Sport</title>
+</head>
+<body>
+    <header>
+        <h1>Elevation Sport</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html#inicio">Inicio</a></li>
+                <li><a href="#login" id="nav-login" class="nav-login">Iniciar Sesión</a></li>
+                <li><a href="#contacto" id="nav-contacto">Contacto</a></li>
+                <li>
+                    <a href="carrito.html" class="cart-link" aria-label="Carrito de compras">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="9" cy="21" r="1"></circle>
+                            <circle cx="20" cy="21" r="1"></circle>
+                            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                        </svg>
+                        <span id="cart-counter">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="registro">
+        <section id="registro-cuenta">
+            <h2>Crear cuenta</h2>
+
+            <form id="form-registro" class="form-registro">
+                <div class="registro-caja">
+                    <div class="campo">
+                        <label for="reg-nombre">Nombre</label>
+                        <input type="text" id="reg-nombre" name="nombre" required autocomplete="name" placeholder="Tu nombre y apellido">
+                    </div>
+                    <div class="campo">
+                        <label for="reg-email">Usuario / Correo</label>
+                        <input type="email" id="reg-email" name="email" required autocomplete="email" placeholder="example@gmail.com">
+                    </div>
+                    <div class="campo">
+                        <label for="reg-password">Contraseña</label>
+                        <input type="password" id="reg-password" name="password" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="btn-enviar">Registrarme</button>
+                    <p id="estado-registro" class="estado" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+
+            <div class="registro-exito" id="registro-exito" hidden role="status" aria-live="polite">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <p class="registro-exito-titulo">¡Cuenta creada!</p>
+                <p class="registro-exito-texto">Tu registro se completó correctamente. Ya podés iniciar sesión con tu correo y contraseña.</p>
+                <a href="index.html" class="btn-volver">Volver al inicio</a>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal-overlay" id="login-modal" aria-hidden="true">
+        <div class="modal modal-login" role="dialog" aria-modal="true" aria-labelledby="login-title">
+            <button type="button" class="btn-cerrar login-cerrar" aria-label="Cerrar inicio de sesión">X</button>
+            <h2 id="login-title" class="login-titulo">INICIAR SESIÓN</h2>
+            <form id="form-login" class="form-login">
+                <div class="login-caja">
+                    <div class="campo">
+                        <label for="login-email">Usuario</label>
+                        <input type="email" id="login-email" name="email" placeholder="example@gmail.com" required autocomplete="email">
+                    </div>
+                    <div class="campo">
+                        <label for="login-password">Contraseña</label>
+                        <input type="password" id="login-password" name="password" required autocomplete="current-password">
+                    </div>
+                    <button type="submit" class="btn-enviar">Ingresar</button>
+                    <p id="estado-login" class="estado" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+            <p class="login-pie">¿NO SOS USUARIO? HACE CLICK ACÁ PARA <a href="registro.html">REGISTRARTE</a></p>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="contacto-modal" aria-hidden="true">
+        <div class="modal modal-contacto" role="dialog" aria-modal="true" aria-labelledby="contacto-title">
+            <button type="button" class="btn-cerrar contacto-cerrar" aria-label="Cerrar contacto y volver al catálogo">X</button>
+            <section id="contacto">
+                <h2 id="contacto-title">Contacto y Nosotros</h2>
+                <div class="contacto-layout">
+                    <div class="contacto-info">
+                        <h3>¿Quiénes somos?</h3>
+                        <p>
+                            Elevation Sport es una marca de equipamiento fitness pensada
+                            para quienes entrenan en serio. Ofrecemos mancuernas, barras,
+                            discos y accesorios de alta resistencia, con envíos a todo el
+                            país y atención directa de nuestro equipo.
+                        </p>
+                        <ul class="redes-sociales" aria-label="Redes sociales">
+                            <li>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                                    </svg>
+                                    <span>Instagram</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
+                                    </svg>
+                                    <span>Facebook</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:contacto@elevationsport.com" aria-label="Gmail">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                        <polyline points="22,6 12,13 2,6"></polyline>
+                                    </svg>
+                                    <span>Gmail</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="contacto-form-wrapper">
+                        <h3>¿Tenés algo para decirnos?</h3>
+                        <form id="form-contacto" class="form-contacto">
+                            <div class="form-campos">
+                                <div class="campo">
+                                    <label for="contacto-nombre">Nombre</label>
+                                    <input type="text" id="contacto-nombre" name="nombre" required autocomplete="name">
+                                </div>
+                                <div class="campo">
+                                    <label for="contacto-email">Correo</label>
+                                    <input type="email" id="contacto-email" name="email" required autocomplete="email" placeholder="ejemplo@gmail.com">
+                                </div>
+                                <div class="campo">
+                                    <label for="contacto-mensaje">Mensaje</label>
+                                    <textarea id="contacto-mensaje" name="mensaje" rows="5" required></textarea>
+                                </div>
+                                <button type="submit" class="btn-enviar">Enviar mensaje</button>
+                                <p id="estado-contacto" class="estado" role="status" aria-live="polite"></p>
+                            </div>
+
+                            <div class="envio-exito" id="envio-exito" hidden role="status" aria-live="polite">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                                <p class="envio-exito-titulo">Enviado correctamente</p>
+                                <p class="envio-exito-texto">Gracias por escribirnos. Te responderemos a la brevedad.</p>
+                                <button type="button" class="btn-enviar btn-volver-form">Volver al formulario</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
