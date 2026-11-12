@@ -11,6 +11,7 @@ const SUPABASE_HEADERS = {
 
 const modal = document.getElementById('product-modal');
 const modalContacto = document.getElementById('contacto-modal');
+const modalLogin = document.getElementById('login-modal');
 
 const leerCarrito = () => {
     try {
@@ -183,7 +184,8 @@ const finalizarCompra = () => {
 const sincronizarScroll = () => {
     const algunAbierto =
         (modal && modal.classList.contains('is-open')) ||
-        (modalContacto && modalContacto.classList.contains('is-open'));
+        (modalContacto && modalContacto.classList.contains('is-open')) ||
+        (modalLogin && modalLogin.classList.contains('is-open'));
     document.body.classList.toggle('no-scroll', Boolean(algunAbierto));
 };
 
@@ -205,6 +207,31 @@ const cerrarModalContacto = () => {
 
     // Volver al catálogo (enfoque al nav para accesibilidad)
     document.getElementById('nav-contacto')?.focus();
+};
+
+// ========== MODAL DE INICIO DE SESIÓN (GLOBAL) ==========
+const abrirModalLogin = () => {
+    if (!modalLogin) return;
+
+    modalLogin.classList.add('is-open');
+    modalLogin.setAttribute('aria-hidden', 'false');
+    sincronizarScroll();
+    modalLogin.querySelector('.btn-cerrar')?.focus();
+};
+
+const cerrarModalLogin = () => {
+    if (!modalLogin) return;
+
+    modalLogin.classList.remove('is-open');
+    modalLogin.setAttribute('aria-hidden', 'true');
+    sincronizarScroll();
+
+    // Reiniciar el formulario y el mensaje de estado al cerrar
+    modalLogin.querySelector('form')?.reset();
+    const estado = modalLogin.querySelector('.estado');
+    if (estado) estado.textContent = '';
+
+    document.getElementById('nav-login')?.focus();
 };
 
 const abrirModal = (articulo) => {
@@ -283,6 +310,14 @@ document.addEventListener('click', (evento) => {
     }
 
     if (
+        evento.target.closest('.login-cerrar') ||
+        evento.target === modalLogin
+    ) {
+        cerrarModalLogin();
+        return;
+    }
+
+    if (
         evento.target.closest('.contacto-cerrar') ||
         evento.target === modalContacto
     ) {
@@ -290,7 +325,14 @@ document.addEventListener('click', (evento) => {
         return;
     }
 
-    // Delegación global en document: funciona en index, carrito, etc.
+    // Delegación global en document: funciona en index, carrito, registro, etc.
+    const navLogin = evento.target.closest('#nav-login, a[href="#login"]');
+    if (navLogin && modalLogin) {
+        evento.preventDefault();
+        abrirModalLogin();
+        return;
+    }
+
     const navContacto = evento.target.closest(
         '#nav-contacto, a[href="#contacto"], a[href$="#contacto"]'
     );
@@ -307,6 +349,11 @@ document.addEventListener('click', (evento) => {
 
 document.addEventListener('keydown', (evento) => {
     if (evento.key !== 'Escape') return;
+
+    if (modalLogin && modalLogin.classList.contains('is-open')) {
+        cerrarModalLogin();
+        return;
+    }
 
     if (modalContacto && modalContacto.classList.contains('is-open')) {
         cerrarModalContacto();
@@ -327,8 +374,27 @@ const contenedorCatalogo = document.querySelector(
 const buscadorInput = document.getElementById('buscador-productos');
 const precioMinInput = document.getElementById('precio-min');
 const precioMaxInput = document.getElementById('precio-max');
+const ordenInput = document.getElementById('orden-productos');
+const mensajeVacio = document.getElementById('catalogo-vacio');
+const btnLimpiarFiltros = document.getElementById('limpiar-filtros');
 
-const crearTarjetaProducto = (producto) => {
+// La tabla no tiene columna "categoria": se infiere del nombre/descripción
+const CATEGORIAS_PATRONES = [
+    { id: 'pesas-rusas', patron: /pesa\s*rusa|kettlebell/i },
+    { id: 'mancuernas', patron: /mancuerna/i },
+    { id: 'discos', patron: /\bdisco/i },
+    { id: 'barras', patron: /barra/i },
+    {
+        id: 'accesorios',
+        patron: /caj[oó]n|bolsa|banda|guante|colchoneta|accesorio|step|salto/i
+    }
+];
+
+const detectarCategoria = (texto) =>
+    CATEGORIAS_PATRONES.find(({ patron }) => patron.test(texto))?.id ??
+    'accesorios';
+
+const crearTarjetaProducto = (producto, indice = 0) => {
     const id = producto.id;
     const nombre = producto.nombre ?? '';
     const precio = Number(producto.precio) || 0;
@@ -338,6 +404,8 @@ const crearTarjetaProducto = (producto) => {
 
     const article = document.createElement('article');
     article.dataset.id = id;
+    article.dataset.orden = String(indice);
+    article.dataset.categoria = detectarCategoria(`${nombre} ${descripcion}`);
 
     const img = document.createElement('img');
     img.src = urlImagen;
@@ -396,8 +464,8 @@ const cargarCatalogo = async () => {
             .forEach((nodo) => nodo.remove());
 
         const frag = document.createDocumentFragment();
-        productos.forEach((producto) => {
-            frag.append(crearTarjetaProducto(producto));
+        productos.forEach((producto, indice) => {
+            frag.append(crearTarjetaProducto(producto, indice));
         });
         contenedorCatalogo.append(frag);
 
@@ -417,6 +485,19 @@ const cargarCatalogo = async () => {
 
 // ========== FILTRADO DEL CATÁLOGO ==========
 // Consulta el DOM en cada ejecución (no cachea el array al cargar el script)
+const tituloDe = (articulo) =>
+    articulo.querySelector('h3')?.textContent || '';
+
+const precioDe = (articulo) =>
+    convertirPrecio(articulo.querySelector('.btn-agregar')?.dataset.precio);
+
+const ORDENADORES = {
+    destacados: (a, b) => Number(a.dataset.orden) - Number(b.dataset.orden),
+    'precio-asc': (a, b) => precioDe(a) - precioDe(b),
+    'precio-desc': (a, b) => precioDe(b) - precioDe(a),
+    az: (a, b) => tituloDe(a).localeCompare(tituloDe(b), 'es')
+};
+
 const filtrarCatalogo = () => {
     const productosCatalogo = Array.from(
         document.querySelectorAll('#catalogo .catalogo-resultados article')
@@ -431,26 +512,89 @@ const filtrarCatalogo = () => {
         precioMaxInput?.value === '' || precioMaxInput?.value == null
             ? Infinity
             : Number(precioMaxInput.value);
+    // Checkboxes múltiples: recolecto todas las categorías tildadas
+    const categoriasActivas = Array.from(
+        document.querySelectorAll('input[name="categoria"]:checked')
+    ).map((input) => input.value);
+
+    // Sin ninguna tildada (o con "Todo" tildado) => sin filtro de categoría
+    const sinFiltroCategoria =
+        categoriasActivas.length === 0 ||
+        categoriasActivas.includes('todo');
 
     const visibles = new Set(
         productosCatalogo.filter((articulo) => {
-            const titulo =
-                articulo.querySelector('h3')?.textContent.toLowerCase() || '';
-            const precio = convertirPrecio(
-                articulo.querySelector('.btn-agregar')?.dataset.precio
+            const titulo = tituloDe(articulo).toLowerCase();
+            const precio = precioDe(articulo);
+            const coincideCategoria =
+                sinFiltroCategoria ||
+                categoriasActivas.includes(articulo.dataset.categoria);
+            return (
+                titulo.includes(busqueda) &&
+                precio >= min &&
+                precio <= max &&
+                coincideCategoria
             );
-            return titulo.includes(busqueda) && precio >= min && precio <= max;
         })
     );
+
+    // Ordenamiento: reacomoda los nodos en el DOM (el buscador queda arriba)
+    const comparar = ORDENADORES[ordenInput?.value] || ORDENADORES.destacados;
+    [...productosCatalogo]
+        .sort(comparar)
+        .forEach((articulo) => contenedorCatalogo.append(articulo));
 
     productosCatalogo.forEach((articulo) => {
         articulo.style.display = visibles.has(articulo) ? '' : 'none';
     });
+
+    if (mensajeVacio) {
+        mensajeVacio.hidden = visibles.size > 0;
+        if (!mensajeVacio.hidden) contenedorCatalogo.append(mensajeVacio);
+    }
 };
 
 buscadorInput?.addEventListener('input', filtrarCatalogo);
 precioMinInput?.addEventListener('input', filtrarCatalogo);
 precioMaxInput?.addEventListener('input', filtrarCatalogo);
+ordenInput?.addEventListener('change', filtrarCatalogo);
+
+const inputsCategoria = Array.from(
+    document.querySelectorAll('input[name="categoria"]')
+);
+const inputCategoriaTodo = document.getElementById('cat-todo');
+
+inputsCategoria.forEach((input) =>
+    input.addEventListener('change', () => {
+        // "Todo" se desmarca al elegir una categoría concreta...
+        if (
+            inputCategoriaTodo &&
+            input !== inputCategoriaTodo &&
+            input.checked
+        ) {
+            inputCategoriaTodo.checked = false;
+        }
+        // ...y vuelve a marcarse si el usuario desmarca todo lo demás
+        if (
+            inputCategoriaTodo &&
+            !inputsCategoria.some((item) => item.checked)
+        ) {
+            inputCategoriaTodo.checked = true;
+        }
+        filtrarCatalogo();
+    })
+);
+
+btnLimpiarFiltros?.addEventListener('click', () => {
+    if (buscadorInput) buscadorInput.value = '';
+    if (precioMinInput) precioMinInput.value = '';
+    if (precioMaxInput) precioMaxInput.value = '';
+    if (ordenInput) ordenInput.value = 'destacados';
+    inputsCategoria.forEach((input) => {
+        input.checked = input === inputCategoriaTodo;
+    });
+    filtrarCatalogo();
+});
 
 cargarCatalogo();
 
@@ -536,3 +680,48 @@ modalContacto?.addEventListener('transitionend', () => {
 
 
 
+
+
+// ========== FORMULARIO DE INICIO DE SESIÓN (MODAL GLOBAL) ==========
+const formLogin = document.getElementById('form-login');
+
+formLogin?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    // Doble chequeo defensivo (el navegador ya bloqueó vacíos/inválidos)
+    if (!formLogin.checkValidity()) {
+        formLogin.reportValidity();
+        return;
+    }
+
+    const estado = document.getElementById('estado-login');
+    if (estado) {
+        estado.textContent = '¡Bienvenido! Inicio de sesión exitoso.';
+    }
+
+    formLogin.reset();
+});
+
+// ========== FORMULARIO DE REGISTRO (registro.html) ==========
+const formRegistro = document.getElementById('form-registro');
+const registroExito = document.getElementById('registro-exito');
+
+formRegistro?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    // Doble chequeo defensivo (el navegador ya bloqueó vacíos/inválidos)
+    if (!formRegistro.checkValidity()) {
+        formRegistro.reportValidity();
+        return;
+    }
+
+    const estado = document.getElementById('estado-registro');
+    if (estado) estado.textContent = '';
+
+    // Ocultar el formulario y mostrar la confirmación visual
+    formRegistro.hidden = true;
+    if (registroExito) {
+        registroExito.hidden = false;
+        registroExito.querySelector('a')?.focus();
+    }
+});
