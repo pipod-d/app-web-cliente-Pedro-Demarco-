@@ -10,6 +10,7 @@ const SUPABASE_HEADERS = {
 };
 
 const modal = document.getElementById('product-modal');
+const modalContacto = document.getElementById('contacto-modal');
 
 const leerCarrito = () => {
     try {
@@ -180,10 +181,30 @@ const finalizarCompra = () => {
 };
 
 const sincronizarScroll = () => {
-    document.body.classList.toggle(
-        'no-scroll',
-        Boolean(modal && modal.classList.contains('is-open'))
-    );
+    const algunAbierto =
+        (modal && modal.classList.contains('is-open')) ||
+        (modalContacto && modalContacto.classList.contains('is-open'));
+    document.body.classList.toggle('no-scroll', Boolean(algunAbierto));
+};
+
+const abrirModalContacto = () => {
+    if (!modalContacto) return;
+
+    modalContacto.classList.add('is-open');
+    modalContacto.setAttribute('aria-hidden', 'false');
+    sincronizarScroll();
+    modalContacto.querySelector('.btn-cerrar')?.focus();
+};
+
+const cerrarModalContacto = () => {
+    if (!modalContacto) return;
+
+    modalContacto.classList.remove('is-open');
+    modalContacto.setAttribute('aria-hidden', 'true');
+    sincronizarScroll();
+
+    // Volver al catálogo (enfoque al nav para accesibilidad)
+    document.getElementById('nav-contacto')?.focus();
 };
 
 const abrirModal = (articulo) => {
@@ -261,6 +282,24 @@ document.addEventListener('click', (evento) => {
         return;
     }
 
+    if (
+        evento.target.closest('.contacto-cerrar') ||
+        evento.target === modalContacto
+    ) {
+        cerrarModalContacto();
+        return;
+    }
+
+    // Delegación global en document: funciona en index, carrito, etc.
+    const navContacto = evento.target.closest(
+        '#nav-contacto, a[href="#contacto"], a[href$="#contacto"]'
+    );
+    if (navContacto && modalContacto) {
+        evento.preventDefault();
+        abrirModalContacto();
+        return;
+    }
+
     if (evento.target.closest('.btn-finalizar')) {
         finalizarCompra();
     }
@@ -268,6 +307,11 @@ document.addEventListener('click', (evento) => {
 
 document.addEventListener('keydown', (evento) => {
     if (evento.key !== 'Escape') return;
+
+    if (modalContacto && modalContacto.classList.contains('is-open')) {
+        cerrarModalContacto();
+        return;
+    }
 
     if (modal && modal.classList.contains('is-open')) {
         cerrarModal();
@@ -409,6 +453,86 @@ precioMinInput?.addEventListener('input', filtrarCatalogo);
 precioMaxInput?.addEventListener('input', filtrarCatalogo);
 
 cargarCatalogo();
+
+// ========== FORMULARIO DE CONTACTO ==========
+const formContacto = document.getElementById('form-contacto');
+const formCampos = formContacto?.querySelector('.form-campos');
+const envioExito = document.getElementById('envio-exito');
+const btnVolverForm = formContacto?.querySelector('.btn-volver-form');
+let temporizadorExito = null;
+
+const mostrarExito = () => {
+    if (!formCampos || !envioExito) return;
+
+    formCampos.hidden = true;
+    envioExito.hidden = false;
+
+    temporizadorExito = setTimeout(() => {
+        restablecerFormContacto();
+    }, 4000);
+};
+
+const restablecerFormContacto = () => {
+    if (temporizadorExito) {
+        clearTimeout(temporizadorExito);
+        temporizadorExito = null;
+    }
+
+    formContacto?.reset();
+    formContacto?.querySelectorAll('.campo-error').forEach((nodo) => {
+        nodo.classList.remove('campo-error');
+    });
+
+    const estado = document.getElementById('estado-contacto');
+    if (estado) estado.textContent = '';
+
+    if (formCampos) formCampos.hidden = false;
+    if (envioExito) envioExito.hidden = true;
+};
+
+// Validación nativa del navegador al intentar enviar incompleto
+formContacto?.addEventListener(
+    'invalid',
+    (evento) => {
+        evento.target.classList.add('campo-error');
+        evento.target.focus();
+    },
+    true
+);
+
+// Quitar marca de error cuando el usuario corrige el campo
+formContacto?.addEventListener('input', (evento) => {
+    if (evento.target.validity.valid) {
+        evento.target.classList.remove('campo-error');
+    }
+});
+
+formContacto?.addEventListener('submit', (evento) => {
+    evento.preventDefault();
+
+    // Doble chequeo defensivo (el navegador ya bloqueó vacíos/inválidos)
+    if (!formContacto.checkValidity()) {
+        formContacto.reportValidity();
+        return;
+    }
+
+    const estado = document.getElementById('estado-contacto');
+    if (estado) estado.textContent = '';
+
+    // Simulación de envío (sin backend): success visual + auto-reset
+    mostrarExito();
+});
+
+btnVolverForm?.addEventListener('click', () => {
+    restablecerFormContacto();
+});
+
+// Al cerrar el modal de contacto, volver al estado inicial del form
+modalContacto?.addEventListener('transitionend', () => {
+    if (!modalContacto.classList.contains('is-open')) {
+        restablecerFormContacto();
+    }
+});
 
 
 
